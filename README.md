@@ -1,16 +1,19 @@
-# incode_group_test_task
+# Test task for InCode group
 
-A new Flutter project.
+## Проект побудований на основі принципів Clean Architecture.
 
-## Getting Started
+Кожен модуль проекту розділений на:
 
-This project is a starting point for a Flutter application.
+Models: Описує типи даних, з якими ми працюємо.
+Datasource: Здійснює прямий доступ до даних.
+Repository: Містить всю бізнес-логіку модуля.
+Presentation: Відповідає за зовнішній вигляд і UI.
+Pages: Описує всі сторінки, які стосуються цього модуля.
+Widgets: Включає окремі елементи, використані на сторінках.
+Providers: Займається керуванням станом і взаємодією між UI та бізнес-логікою.
 
-A few resources to get you started if this is your first Flutter project:
+У моєму прикладі тестового завдання Datasource відповідає за завантаження даних з API і їх парсинг.
+Repository надає дані про персонажів. Важливо зазначити, що зазвичай у подібній архітектурі існує два DataSource: один для роботи онлайн, інший для офлайн-режиму. Repository використовується для абстрагування від різних типів DataSource.
+Providers приймає всі події від UI та, на основі вводу від користувача, оновлює стан застосунку.
+У проекті для керування станом використовується стороння бібліотека flutter_riverpod, яка добре відповідає принципам Clean Architecture, описаним вище
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
