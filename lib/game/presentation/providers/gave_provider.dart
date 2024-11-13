@@ -29,7 +29,7 @@ class GameStatistic {
     required this.success,
   });
 
-  void update({required bool guessed}) {
+  void _update({required bool guessed}) {
     total++;
     if (guessed) {
       success++;
@@ -70,7 +70,7 @@ class GameController extends StateNotifier<GameState> {
     if (state is GameStatePlaying) {
       var playingState = state as GameStatePlaying;
       bool guessed = playingState.currentPersonage.house == house;
-      playingState.gameStat.update(guessed: guessed);
+      playingState.gameStat._update(guessed: guessed);
 
       if (playingState.list[playingState.currentPersonage] == null) {
         playingState.list[playingState.currentPersonage] = 0;
@@ -89,7 +89,7 @@ class GameController extends StateNotifier<GameState> {
   }
 }
 
-final gameStateProvided =
+final gameStateProvider =
     StateNotifierProvider<GameController, GameState>((ref) {
   return GameController();
 });

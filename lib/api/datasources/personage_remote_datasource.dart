@@ -1,5 +1,5 @@
-import 'package:incode_group_test_task/data/datasources/personage_datasource_abs.dart';
-import 'package:incode_group_test_task/data/models/personage_model.dart';
+import 'package:incode_group_test_task/api/datasources/personage_datasource_abs.dart';
+import 'package:incode_group_test_task/api/data/models/personage_model.dart';
 
 import 'package:dio/dio.dart' ;
 
