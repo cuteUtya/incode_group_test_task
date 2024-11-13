@@ -38,7 +38,7 @@ class GameStatistic {
     }
   }
 
-  static GameStatistic zero = GameStatistic(
+  static GameStatistic zero() => GameStatistic(
     total: 0,
     failed: 0,
     success: 0,
@@ -52,24 +52,40 @@ class GameController extends StateNotifier<GameState> {
     repo.init().then((_) {
       state = GameStatePlaying(
         currentPersonage: repo.next(),
-        gameStat: GameStatistic.zero,
+        gameStat: GameStatistic.zero(),
       );
     });
   }
 
   void updatePersonage() {
     if (state is GameStatePlaying) {
-      state = (state as GameStatePlaying)..currentPersonage = repo.next();
+      state = GameStatePlaying(
+        currentPersonage: repo.next(),
+        gameStat: (state as GameStatePlaying).gameStat,
+      );
       return;
     }
 
     throw Exception('You cannot update personage when game is loading');
   }
 
+  void reset() {
+    state = GameStatePlaying(currentPersonage: repo.next(), gameStat: GameStatistic.zero());
+  }
+
   void guessHouse(String house) {
     if (state is GameStatePlaying) {
       var playingState = state as GameStatePlaying;
-      bool guessed = playingState.currentPersonage.house == house;
+      late bool guessed;
+
+      if (house == 'Not in the house' &&
+              playingState.currentPersonage.house.isEmpty ||
+          house == playingState.currentPersonage.house) {
+        guessed = true;
+      } else {
+        guessed = false;
+      }
+
       playingState.gameStat._update(guessed: guessed);
 
       if (playingState.list[playingState.currentPersonage] == null) {

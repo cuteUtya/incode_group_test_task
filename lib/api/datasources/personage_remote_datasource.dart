@@ -11,6 +11,6 @@ class PersonageRemoteDatasource implements PersonageDatasourceAbs {
   Future<List<PersonageModel>> fetchPersonages() async {
     var responce = await Dio().get(apiEndPoint);
     var data = responce.data as List<dynamic>;
-    return data.map((e) => PersonageModel.fromJson(e)).toList();
+    return data.map((e) => PersonageModel.fromJson(e)).toList().where((e) => e.image.isNotEmpty).toList();
   }
 }
