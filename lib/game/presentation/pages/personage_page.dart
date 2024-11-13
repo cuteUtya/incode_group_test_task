@@ -42,7 +42,9 @@ class PersonagePage extends StatelessWidget {
               const Text(
                 'Denied',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.redAccent),
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                ),
               )
           ],
         ),
