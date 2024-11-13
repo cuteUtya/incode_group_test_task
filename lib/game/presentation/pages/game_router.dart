@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:incode_group_test_task/game/presentation/pages/game_page.dart';
+import 'package:incode_group_test_task/game/presentation/pages/list_page.dart';
 import 'package:incode_group_test_task/game/presentation/providers/game_provider.dart';
+import 'package:incode_group_test_task/game/presentation/providers/navigation_provider.dart';
 
 class GameRouter extends ConsumerStatefulWidget {
   const GameRouter({super.key});
@@ -11,32 +13,35 @@ class GameRouter extends ConsumerStatefulWidget {
 }
 
 class _GameRouterState extends ConsumerState<GameRouter> {
-  int currentTabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    final currentTabIndex = ref.watch(navigationProvider);
     final state = ref.watch(gameStateProvider);
-    final controller = ref.read(gameStateProvider.notifier);
-
-
+    final gameController = ref.read(gameStateProvider.notifier);
+    final navigatorController = ref.read(navigationProvider.notifier);
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(currentTabIndex == 0 ? 'Home Screen' : 'List Screen'),
         actions: [
-          TextButton(onPressed: () => controller.reset(), child: Text('Reset'))
+          TextButton(
+            onPressed: () => gameController.reset(),
+            child: const Text('Reset'),
+          )
         ],
       ),
       body: state is GameStateloading
           ? Container()
           : currentTabIndex == 0
               ? GamePage(
-                  controller: controller,
+                  controller: gameController,
                   state: state as GameStatePlaying,
                 )
-              : Container(),
+              : ListPage(state: state as GameStatePlaying),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentTabIndex,
-        onTap: (d) => setState(() => currentTabIndex = d),
+        onTap: (d) => setState(() => navigatorController.setPage(d)),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

@@ -50,7 +50,7 @@ class PersonageModel {
         species: json["species"],
         gender: json["gender"],
         house: json["house"],
-        dateOfBirth: json["dateOfBirth"].toString(),
+        dateOfBirth: json["dateOfBirth"]?.toString(),
         yearOfBirth: json["yearOfBirth"],
         wizard: json["wizard"],
         ancestry: json["ancestry"],

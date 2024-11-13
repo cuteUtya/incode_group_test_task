@@ -24,7 +24,7 @@ class StatsWidget extends StatelessWidget {
   Widget _tile(String name, String value) {
     return Card(
 
-      child: Padding(padding: EdgeInsets.all(20), child:  Column(
+      child: Padding(padding: const EdgeInsets.all(20), child:  Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(

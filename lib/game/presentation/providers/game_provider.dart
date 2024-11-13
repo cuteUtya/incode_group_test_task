@@ -10,11 +10,23 @@ class GameStateloading extends GameState {}
 class GameStatePlaying extends GameState {
   PersonageModel currentPersonage;
   GameStatistic gameStat;
-  Map<PersonageModel, int> list = {};
+  Map<PersonageModel, PersonageSaved> list = {};
 
-  GameStatePlaying({
-    required this.currentPersonage,
-    required this.gameStat,
+  GameStatePlaying(
+      {required this.currentPersonage,
+      required this.gameStat,
+      required this.list});
+}
+
+class PersonageSaved {
+  int guessesCount;
+  bool guessed;
+  PersonageModel personage;
+
+  PersonageSaved({
+    this.guessed = false,
+    this.guessesCount = 0,
+    required this.personage,
   });
 }
 
@@ -39,10 +51,10 @@ class GameStatistic {
   }
 
   static GameStatistic zero() => GameStatistic(
-    total: 0,
-    failed: 0,
-    success: 0,
-  );
+        total: 0,
+        failed: 0,
+        success: 0,
+      );
 }
 
 class GameController extends StateNotifier<GameState> {
@@ -51,17 +63,18 @@ class GameController extends StateNotifier<GameState> {
   GameController() : super(GameStateloading()) {
     repo.init().then((_) {
       state = GameStatePlaying(
-        currentPersonage: repo.next(),
-        gameStat: GameStatistic.zero(),
-      );
+          currentPersonage: repo.next(),
+          gameStat: GameStatistic.zero(),
+          list: {});
     });
   }
 
-  void updatePersonage() {
+  void updatePersonage({PersonageModel? newPersonage}) {
     if (state is GameStatePlaying) {
       state = GameStatePlaying(
-        currentPersonage: repo.next(),
+        currentPersonage: newPersonage ?? repo.next(),
         gameStat: (state as GameStatePlaying).gameStat,
+        list: (state as GameStatePlaying).list,
       );
       return;
     }
@@ -70,7 +83,11 @@ class GameController extends StateNotifier<GameState> {
   }
 
   void reset() {
-    state = GameStatePlaying(currentPersonage: repo.next(), gameStat: GameStatistic.zero());
+    state = GameStatePlaying(
+      currentPersonage: repo.next(),
+      gameStat: GameStatistic.zero(),
+      list: {},
+    );
   }
 
   void guessHouse(String house) {
@@ -86,17 +103,22 @@ class GameController extends StateNotifier<GameState> {
         guessed = false;
       }
 
+      //Update score
       playingState.gameStat._update(guessed: guessed);
 
+      //A1dd personage to the list, or update guess count
       if (playingState.list[playingState.currentPersonage] == null) {
-        playingState.list[playingState.currentPersonage] = 0;
-      }
-
-      if (!guessed) {
         playingState.list[playingState.currentPersonage] =
-            playingState.list[playingState.currentPersonage]! + 1;
+            PersonageSaved(personage: playingState.currentPersonage);
       }
 
+      if (guessed) {
+        playingState.list[playingState.currentPersonage]!.guessed = true;
+      } else {
+        playingState.list[playingState.currentPersonage]!.guessesCount++;
+      }
+
+      //Next personage
       updatePersonage();
       return;
     }
